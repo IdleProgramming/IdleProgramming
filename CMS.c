@@ -126,7 +126,7 @@ void menu(void)
     );
 
     
-    while(option != 6)
+    while(option != 5)
     {
         //printf("%s", title_2);
 
