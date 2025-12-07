@@ -10,7 +10,9 @@ void menu(void);
 int is_name_valid(char *name);
 int is_date_valid(int date,int month,int year);
 void add_vehicle_data_base(int *vehicle_count);
+void search_vehicle(int *vehicle_count);
 void view_vehicle(int *vehicle_count);
+void delete_vehicle(int *vehicle_count);
 
 /*Declare max amount of individual vehicle info at a time*/
 #define stock 10
@@ -52,8 +54,6 @@ void head_msg(void)
     printf("%s",title_1);
     printf("\n\n");
     msg_in_center();/*calling function*/
-
-    printf("%s",title_1);
 
     menu();/*calling function*/
 }
@@ -128,7 +128,7 @@ void menu(void)
     
     while(option != 6)
     {
-        printf("%s", title_2);
+        //printf("%s", title_2);
 
         printf("\n\n=====================================================================\n");
         printf("\n                              Main Menu                              ");
@@ -137,12 +137,12 @@ void menu(void)
         printf("\n");
 
 
-        printf("1. Add Vehicle\n2. Search Vehicle\n3. View Vehicles\n4. Delete Vehicle\n5. Update Password\n6. Exit\n");
+        printf("1. Add Vehicle\n2. Search Vehicle\n3. View Vehicles\n4. Delete Vehicle\n5. Exit\n");
         printf("\nEnter choice : ");
         scanf("%d",&option);
         printf("\n\n");
 
-        if(option<1 || option>6) 
+        if(option<1 || option>5) 
         {
             printf("\nInvalid choice please try again.\n\n");
             break;
@@ -160,28 +160,25 @@ void menu(void)
             case 2:
             {
                 printf("%s",title_2);
+                search_vehicle(&vehicle_count);
                 break;
             }
 
             case 3:
             {
                 printf("%s",title_2);
+                view_vehicle(&vehicle_count); /*calling function*/
                 break;
             }
 
             case 4:
             {
                 printf("%s",title_2);
+                delete_vehicle(&vehicle_count);
                 break;
             }
 
             case 5:
-            {
-                printf("%s",title_2);
-                break;
-            }
-
-            case 6:
             {
                 printf("\n-Exiting Program");
                 return;
@@ -311,7 +308,7 @@ void add_vehicle_data_base(int *vehicle_count)
     } while (!is_name_valid(name));
 
     strcpy(category_[*vehicle_count].manufacturer_name, name);
-    printf("Vehicle name is valid and has been entered.\n");
+    printf("Manufacturer name is valid and has been entered.\n");
 
     do 
     {
@@ -338,4 +335,147 @@ void add_vehicle_data_base(int *vehicle_count)
 
 
     return;    
+}
+
+
+void search_vehicle(int *vehicle_count)
+{
+    printf("\n\n=====================================================================\n");
+    printf("                           Search Vehicle                  ");
+    printf("\n=====================================================================\n\n");
+
+    char search_id[50];
+    int found = -1;
+    int i;
+
+    if (*vehicle_count == 0)
+    {
+        printf("\nNo vehicles to search.\n");
+        printf("\nPress any key to continue...\n");
+        getche();
+        return;
+    }
+
+    printf("\nEnter Vehicle ID to search: ");
+    getchar();
+    gets(search_id);
+
+    for (i = 0; i < *vehicle_count; i++)
+    {
+        if (strcmp(category_[i].vehicle_ID, search_id) == 0)
+        {
+            found = i;
+            break;
+        }
+    }
+
+    if (found == -1)
+    {
+        printf("\nVehicle NOT FOUND.\n");
+    }
+    else
+    {
+        printf("\nVehicle FOUND:\n");
+        printf("---------------------------------------\n");
+        printf("Vehicle ID: %s\n", category_[found].vehicle_ID);
+        printf("Vehicle Name: %s\n", category_[found].vehicle_name);
+        printf("Manufacturer Name: %s\n", category_[found].manufacturer_name);
+        printf("Issued Date: %d/%d/%d\n",
+               category_[found].issued_date,
+               category_[found].issued_month,
+               category_[found].issued_year);
+        printf("---------------------------------------\n");
+    }
+
+    printf("\nPress any key to continue...\n");
+    getche();
+}
+
+
+void view_vehicle(int *vehicle_count)
+{
+    printf("\n\n=====================================================================\n");
+    printf("                             Vehicle  List                  ");
+    printf("\n=====================================================================\n\n");
+
+    int i;
+
+    if (*vehicle_count == 0)
+    {
+        printf("\n---------------------------------------------------------------------");
+        printf("\n\nNo vehicles in the system to display..\n");
+        printf("\n---------------------------------------------------------------------\n\n");
+        return;
+    }
+
+    for(i = 0; i<*vehicle_count; i++)
+    {
+        printf("\nVehicle %d ",i+1);
+        printf("\n---------------------------------------");
+        printf("\nVehicle ID: %s",category_[i].vehicle_ID);
+        printf("\nVehicle Name: %s",category_[i].vehicle_name);
+        printf("\nManufacturer Name: %s",category_[i].manufacturer_name);
+        printf("\nIssued Date: %d/%d/%d",category_[i].issued_date,category_[i].issued_month,category_[i].issued_year);
+        printf("\n---------------------------------------");
+
+    }
+
+    printf("\n\nPress any key to continue...\n\n\n\n");
+    getche();
+
+    return;
+}
+
+
+void delete_vehicle(int *vehicle_count)
+{
+    printf("\n\n=====================================================================\n");
+    printf("                           Delete Vehicle                  ");
+    printf("\n=====================================================================\n\n");
+
+    char delete_id[50];
+    int found = -1;
+    int i;
+
+    if(*vehicle_count == 0)
+    {
+        printf("\nNo vehicles to delete. \n");
+        printf("\nPress any key to continue...\n");
+        getche();
+        return;
+    }
+
+    printf("\nEnter vehicle ID to delete: ");
+    getchar();
+    gets(delete_id);
+
+    for(i=0; i<*vehicle_count; i++)
+    {
+        if(strcmp(category_[i].vehicle_ID, delete_id) == 0)
+        {
+            found = i;
+            break;
+        }
+    }
+
+    if (found == -1)
+    {
+        printf("\nVehicle not detected. \n");
+    }
+    else
+    {
+        for(i=found; i<*vehicle_count -1; i++)
+        {
+            category_[i] = category_[i+1];
+        }
+
+        (*vehicle_count)--;
+
+        printf("\nVehicle deleted successfully.\n");
+    }
+
+    printf("\nPress any key to continue...\n");
+    getche();
+
+    return;
 }
