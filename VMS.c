@@ -380,10 +380,7 @@ void search_vehicle(int *vehicle_count)
         printf("Vehicle ID: %s\n", category_[found].vehicle_ID);
         printf("Vehicle Name: %s\n", category_[found].vehicle_name);
         printf("Manufacturer Name: %s\n", category_[found].manufacturer_name);
-        printf("Issued Date: %d/%d/%d\n",
-               category_[found].issued_date,
-               category_[found].issued_month,
-               category_[found].issued_year);
+        printf("Issued Date: %d/%d/%d\n",category_[found].issued_date,category_[found].issued_month,category_[found].issued_year);
         printf("---------------------------------------\n");
     }
 
